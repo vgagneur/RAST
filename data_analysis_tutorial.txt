@@ -1,0 +1,98 @@
+RAST output excel spreadsheet analysis tutorial. 
+
+%%%%%%%%%%%%%%% DATA ANALYSIS TUTORIAL (EXCEL), simple plot
+ 
+ Once the analysis is run, an Excel spread sheet should have been created. Open the Excel spread sheet, select all the data (ctrl + A or clic top left corner) and click under the "insert" tab: "create pivot chart", create the chart in a new work sheet.
+ 
+ Let us try plotting the data "proportion of 110 match" per grain, for ST=10. Here's how to do it:
+
+ - In the excel spread sheet where the pivot chart was created, right click the pivot table or chart and select "show fields". 
+
+ - In the PivotTable Fields, tick "pm110", "grainID", and "ST". "pmxxx" stand for the proportion of match of plane type xxx, 
+	note that fcc analysis uses the same names as bcc planes, where 100,110,112,123 (bcc) <=> 111 -111 1-11 11-1 (fcc), for bcc several planes exist per plane type family, in fcc each plane is counted individually.
+
+ - Drag "grainID" to the "row" box, and "ST" to the "filter" box. IMPORTANT: if you've run the analysis for varying values of N and IR, you should also add these in the filter box! (By default it will sum the results across analyses)
+
+ - You should now see a "ST" expanding list in the table or chart, click it, then tick only "10" so that only the data for ST=10 is checked (you might need to tick "select multiple items" first). IMPORTANT: if you've run the analysis for varying values of N and IR, you should also select unique values of these! 
+
+ - (optional) change the chart type to stacked columns (right click the pivot chart, change chart type and select stacked columns).
+
+  - pm110 gives the proportion of lines matching {110} calculated on a picture per picture basis. If only 1 picture was entered per grain tested, the value per grain should be between 0 and 100%. However, if multiple pictures in your dataset are from the same grain, the total of the stacked columns may be beyond 100% as the different pictures proportions are summed by default. 
+
+ - To modify that, click the "pm110" field in the PivotTable fields "Values" box
+
+ - select "value field settings", then select "average" and click "ok". 
+
+ - Now the value shown on the graph should be the average proportion of match measured in each picture, per grain, and therefore somewhere between 0 and 100%.
+
+ - Those kinds of quick plots are most useful during experimentation to quickly check if the data behaves as expected, or to identify grain / picture specific behaviours (simply replace "grainID" by the "pictureID" field for the latter). E.g. if a grain or a picture behaves weirdly compared to others, this may be a sign that the Euler entered is wrong or that the line detection did not work properly, you should inspect the appropriate figures. 
+ 
+ 
+%%%%%%%%%%%%% MAKING A BOX PLOT FOR THE LINES DETECTED ON YOUR PICTURES
+ 
+ If you want to plot the same "box plots" as presented in the paper, for a more rigorous analysis, here are the steps you should follow:
+ 
+ - in the field list, select m100 m110 m112 m123, u111 and nlines. These are the raw counts of lines matching each family, or the special condition for bcc (unambiguous <111> slip on 112 and/or 123) and fcc (ambiguous slip, matches more than one plane), and nlines the total amount of lines detected.
+
+ - Make sure those are all given as "Sum of" in the "values" box as we want to sum the number of lines detected in each picture made within a grain to get the data of said grain. 
+
+ - Then in the field list, also tick select ST, and grainID. (if you've used multiple IR and N, tick these too) 
+ 
+ - Drag "ST" in "filter" and "grain" in "rows". (if you've used multiple IR and N, add them to the filter box too) 
+
+ - Select only "ST = 10" or change if you want to use a different score threshold ST (if using larger ST, you should see that the line counts decrease as less lines are included in the statistics). 
+
+ - Look at the pivot table created, all values shown in the table should now be integers, since those are all line quantities, and all mxxx and u111 should be <= nline in each grain, since bnline is the total number of detected lines.
+ 
+ - (optional) To eliminate a picture from the analysis (if you think an error in Euler or line detection happened) simply add "pictureID" to the filter box, next to "ST",  expand the picture field menu and untick the picture IDs you want to ignore.
+
+ - Once satisfied, copy the content of the pivot table to a new worksheet.
+
+ - Using excel, calculate the proportion of lines detected in each grain fitting each condition, by calculating mxxx/bnlines (and u111/bnlines) for each grain.
+ 
+ - let us now plot the box plots, each box corresponding to a condition (e.g. match 100, match 110...), and each data point to a grain
+
+ - in excel, name each value you've calculated accordingly (e.g. {100},{110}, <111> etc.)
+
+ - make sure the data is laid out such that the left column has the name of each "condition", next to a succession of columns corresponding to the value calculated in each grain.
+
+ - drag select this table (names + values per grain)
+
+ - click "insert -> statistics chart -> box and whiskers"
+ 
+ And hopefully you should now have a box plot, giving you the proportions of lines detected in each grain that match each conditions,
+ ready to be compared with other samples' box plots! 
+
+%%%%%%%% MAKING A BOX PLOT FOR THE CODE GENERATED TEST LINES
+
+It is very important to check if your grain orientations are biasing your observations, especially when comparing between datasets! That's what the uniformly distributed test lines (0-180 degree) are for.
+
+ - Follow the same procedure, but select instead tm100 tm110 tm112 tm123, tu111 and tnlines. "t" here refers to "test"
+
+ - In theory there should be 720 test lines per picture tested (0.25 to 180 degree oriented lines with a 0.25 step in orientation).
+
+ - To adjust the amount of generated test lines used for these stats e.g. larger or smaller step, see RAST_line_processing.m.
+
+ - Then, follow the same methodology as for the "real lines" in the previous section.
+
+%%%%%%%% HOW TO CHECK THAT THE CODE WORKS FOR YOU
+
+The main risk is if the format/convention of your Euler angles does not match the Euler angles we used. We used Bunge convention, and processed our .cpr/.crc data using the matlab mtex toolbox. 
+
+I would recommend checking each of these 3 points:   
+
+ (A) A first easy check is to look at the amount of "nomatch" lines.
+ If using the correct IR (not too small), and the correct nei (not too small), there should be no reason
+ for any "no match" line to be included in the statistics of the real detected lines, as these would have to not be aligned with slip traces, or you may have underestimated the orientation error between your Euler angles and the slip trace imaged.
+
+ (B) compare your test line box plot to the "real sample" box plot,
+ hopefully your detected lines box plots should show "obvious" differences with the test
+ line generation. 
+
+ (C) If not, there is a risk that your analysis did not work (maybe the Euler convention of your microscope or EBSD software is different from ours),
+ therefore we would recommend that you first try and analysis a sample of "known" and "simple" slip activity, e.g.
+ B2 Ti2AlMo (50Ti-25Al-25Mo at.% homogeneised at 1200C for 100h, shorter durations should be fine), which we found to match {110} planes close to 100% of the time (plus the sample is easy to polish, and slip traces are very easy to see). 
+ You could also test "pure" fcc Nickel, although getting a clean un-scratched sample can be more challenging, you should fine close to 100% of (111) plane match.
+ Just make sure you get the expected outcome on those simple samples before trying the code on more complex slip activities e.g. in bcc Fe, where the difference between "random luck" and  "sample slip behaviour" are much more difficult to tell appart.
+
+
