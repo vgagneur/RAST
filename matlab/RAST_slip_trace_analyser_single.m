@@ -3,7 +3,8 @@ function  [best,second,matches]=RAST_slip_trace_analyser_single(CO,slips,lineslo
 % RAST v1.1. Change from v1.0: the line-to-trace angle is measured on the 180 degree circle (0 to 90 deg).
 % In v1.0, a near-vertical line matched through the +/-180 deg window got an angle of ~170 deg instead
 % of ~10 deg, and that trace was then ranked as the worst candidate in the best / second match choice.
-% Which traces match a line (|angle| < IR) is unchanged.
+% Which traces match a line (|angle| < IR) is unchanged, so the match counts are those of v1.0; only the
+% best family (the line colour in the figures) can change for near-vertical lines.
 
 %%%%%%%%%%%%%%
 % Automatic matching of theoretical slip traces vs detected lines, by Vincent Gagneur
@@ -88,12 +89,19 @@ for i = 1:length(CO)
         refdeg=atand(slope);
         linedeg=atand(lineslope);
 
-        % v1.1: angle between line and trace measured on the 180 degree circle, so that e.g. a line
-        % at -86 deg and a trace at +84 deg are 10 deg apart (v1.0 recorded 170 deg for such pairs).
-        deg=mod(refdeg-linedeg+90,180)-90; % signed difference in [-90, 90)
-        deg=abs(deg);                      % angular difference in [0, 90]
+        if (((refdeg-error)<(linedeg)) & ((linedeg)<(refdeg+error)))||(((refdeg-error+180)<(linedeg)) & ((linedeg)<(refdeg+error+180)))||(((refdeg-error-180)<(linedeg)) & ((linedeg)<(refdeg+error-180)))
+            % (matching test unchanged from v1.0: |line - trace| < IR, also across +/-90 deg)
 
-        if deg<error % same matching window as v1.0 (|line - trace| < IR, across +/-90 deg)
+            % v1.1: angle between line and trace measured on the 180 degree circle, so that e.g. a line
+            % at -86 deg and a trace at +84 deg are 10 deg apart (v1.0 recorded 170 deg for such pairs).
+            deg=refdeg-linedeg;            % in (-180, 180)
+            if deg>=90                     % wrap across +/-90 deg; other angles are exactly those of v1.0
+                deg=deg-180;
+            elseif deg<-90
+                deg=deg+180;
+            end
+            deg=abs(deg);                  % angular difference in [0, 90]
+
             matched=matched+1;
 
             sloped(numel(zeros(1,matched)))=0;

@@ -16,10 +16,15 @@ RAST is described in:
 | Version | Where | Use it if |
 |---|---|---|
 | **1.0** (MATLAB) | [`matlab-1.0-legacy/`](matlab-1.0-legacy/), or the [`v1.0` tag](https://github.com/vgagneur/RAST/tree/v1.0) | you want to reproduce the paper exactly: this is the code used for it |
-| **1.1** (MATLAB and Python) | in preparation, branch [`v1.1-preview`](https://github.com/vgagneur/RAST/tree/v1.1-preview) | new analyses, once released (see below) |
+| **1.1 Python** (preview) | [`python/`](python/) | new analyses without a MATLAB licence; tutorials in [`python/docs`](python/docs) |
+| **1.1 MATLAB** (preview) | [`matlab/`](matlab/) | new analyses in MATLAB |
 
-**RAST 1.1 is in preparation.** It fixes how near-vertical lines (close to ±90°) are matched and scored, and adds a
-Python version that does not need a MATLAB licence. See [CHANGELOG.md](CHANGELOG.md).
+**This branch is a preview of RAST 1.1.** 1.1 fixes how near-vertical lines (close to ±90°) are matched and scored,
+and adds a Python version of the whole pipeline. Both 1.1 versions are being checked on the reference datasets
+before release. See [CHANGELOG.md](CHANGELOG.md).
+
+Working with an AI coding agent? It will find its notes in [AGENTS.md](AGENTS.md); see
+[Tutorial 3](python/docs/tutorial_3_ai_agent.md).
 
 ## Getting started with 1.0 (MATLAB)
 

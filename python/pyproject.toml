@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rast"
+version = "1.1.0"
+description = "RAST: Rapid Analysis of Slip Traces on SEM pictures of indents (Python version)"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Vincent Gagneur", email = "vincent26100@gmail.com" }]
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.24", "scipy>=1.10", "matplotlib>=3.7", "pillow>=9.5", "openpyxl>=3.1"]
+
+[project.urls]
+Homepage = "https://github.com/vgagneur/RAST"
+Paper = "https://doi.org/10.1016/j.matchar.2025.115524"
+
+[project.scripts]
+rast = "rast.cli:main"
+
+[tool.setuptools]
+packages = ["rast"]

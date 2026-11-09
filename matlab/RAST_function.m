@@ -186,8 +186,10 @@ for m=1:1:no
 
                                     % v1.1: orientation difference on the 180 degree circle (0 to 90 deg), so that
                                     % lines at +89 and -89 deg count as similar (2 deg apart). v1.0 used abs(co_1-co_2).
-                                    dco=mod(co_1-co_2,180);
-                                    dco=min(dco,180-dco);
+                                    dco=abs(co_1-co_2);
+                                    if dco>90
+                                        dco=180-dco;
+                                    end
 
                                     if A_1==0 %skip if the current line is on mask (could be put earlier for faster computation?)
                                         skip=0;%fyi
@@ -199,7 +201,7 @@ for m=1:1:no
 
                                          coefmat(i,j,numlines+5+6*(lno-1))=coefmat(i,j,numlines+5+6*(lno-1))+1/(o^2); %score increases +1/order² per similar neibour
 
-                                    elseif ((45-nei_deg)<abs(co_1) && abs(co_1)<(45+nei_deg)) && ((90-nei_deg)<dco) %(same test as v1.0: 90-nei < |co_1-co_2| < 90+nei, written on the 180 deg circle) NB : not sure that nei_deg, the fluctuation around a specific trace orientation, applies to a noise area, maybe nei_deg should be different for the noise
+                                    elseif ((45-nei_deg)<abs(co_1) && abs(co_1)<(45+nei_deg)) && ((90-nei_deg)<abs(co_1-co_2) && abs(co_1-co_2)<(90+nei_deg)) %NB : not sure that nei_deg, the fluctuation around a specific trace orientation, applies to a noise area, maybe nei_deg should be different for the noise
                                          coefmat(i,j,numlines+5+6*(lno-1))=coefmat(i,j,numlines+5+6*(lno-1))-10/(o); %if line is 45° and has a neighbour at 90° (-45°) ==> likely to be noise so reduces score.
 
                                     elseif (((0-nei_deg)<co_1 && co_1<(0+nei_deg))||(((90-nei_deg)<co_1)||(co_1<(-90+nei_deg)))) && ((((45-nei_deg)<abs(co_2) && abs(co_2)<(45+nei_deg)))||(((-45-nei_deg)<abs(co_2) && abs(co_2)<(-45+nei_deg)))) %if line is horizontal and has a 45° neigbour

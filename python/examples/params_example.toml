@@ -1,0 +1,12 @@
+# RAST parameters for `rast run --params params_example.toml`.
+# Every line is optional: a missing parameter keeps its default (shown here).
+# Values given on the command line win over this file.
+
+N = [100]          # segmentation size(s) in px; e.g. [100, 120, 140] runs three analyses
+IR = [10]          # identification range(s) in deg
+nsmooth = 10       # smoothing passes (raise to ~20 for dirty or poorly contrasted pictures)
+degrot = 0         # anticlockwise rotation (deg) between SEM and EBSD frames
+nei_deg = 3.6      # max orientation difference (deg) for neighbouring lines to count as similar
+numlines = 3       # lines detected per segment
+crystal = 1        # 1 = bcc / B2, 2 = fcc
+scorefigs = [0, 10]  # score thresholds for which figures are drawn

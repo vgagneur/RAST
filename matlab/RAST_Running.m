@@ -10,7 +10,7 @@
 %
 % Changes from v1.0 (see CHANGELOG.md in the repository):
 % - line-to-trace angles are measured on the 180 degree circle, which fixes the best / second match
-%   choice for near-vertical lines (RAST_slip_trace_analyser_single.m);
+%   choice for near-vertical lines (RAST_slip_trace_analyser_single.m); match counts are unchanged;
 % - neighbour orientations are compared on the 180 degree circle when scoring, so lines at +89 and
 %   -89 deg count as similar (RAST_function.m);
 % - default parameters: one segmentation size N = 100 px and IR = 10 deg.
